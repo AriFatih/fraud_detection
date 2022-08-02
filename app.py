@@ -54,15 +54,15 @@ st.info(
 
 # Collects user input features into dataframe
 uploaded_file = st.file_uploader("Upload your input CSV file", type=["csv"])
-model_xgb = pickle.load(open("fraud_detection_xgb.pkl","rb"))
+#model_xgb = pickle.load(open("fraud_detection_xgb.pkl","rb"))
 model_log=pickle.load(open("fraud_detection_log_smote.pkl","rb"))
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
     X = df.drop("Class", axis =1)
     proba_log = model_log.predict_proba(X)
-    proba_xgb = model_xgb.predict_proba(X)
+    #proba_xgb = model_xgb.predict_proba(X)
     df["pred_proba_log"] = proba_log[:,1]
-    df["pred_proba_xgb"] = proba_xgb[:,1]
+    #df["pred_proba_xgb"] = proba_xgb[:,1]
     df = df.sort_values(by='Class', ascending=False)
     #st.write("The number of ")
     st.write(df)
