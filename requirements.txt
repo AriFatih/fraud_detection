@@ -1,4 +1,4 @@
 scikit-learn==1.0.0
 streamlit==1.10.0
 tensorflow==2.8.0
-xgboost==1.5-1
+xgboost==1.6.0
