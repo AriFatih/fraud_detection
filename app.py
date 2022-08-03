@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 import base64
+import tensorflow as tf
+from sklearn.preprocessing import StandardScaler
 # from PIL import Image
 
 
@@ -51,21 +53,23 @@ st.info(
                     """
             )
 
-
+scaler2 = StandardScaler()
 # Collects user input features into dataframe
 uploaded_file = st.file_uploader("Upload your input CSV file", type=["csv"])
 model_xgb = pickle.load(open("fraud_detection_xgb.pkl","rb"))
 model_log=pickle.load(open("fraud_detection_log_smote.pkl","rb"))
+model_dl=tf.keras.models.load_model('deep_fraud.h5')
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
     df.columns = df.columns.str.lower()
     X = df.drop("class", axis =1)    
+    X_scaled = scaler2.fit_transform(X)
     proba_log = model_log.predict_proba(X)
     proba_xgb = model_xgb.predict_proba(X)
+    proba_dl= model_dl.predict(X_scaled)
     df["pred_proba_log"] = proba_log[:,1]
     df["pred_proba_xgb"] = proba_xgb[:,1]
-    df["pred_proba_log"] = df["pred_proba_log"].round(2)
-    df["pred_proba_xgb"] = df["pred_proba_xgb"].round(2)
+    df["pred_proba_dl"] = proba_dl
     df = df.sort_values(by='class', ascending=False)
     #st.write("The number of ")
     st.write(df)
