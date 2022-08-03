@@ -64,6 +64,7 @@ if uploaded_file is not None:
     proba_xgb = model_xgb.predict_proba(X)
     df["pred_proba_log"] = proba_log[:,1]
     df["pred_proba_xgb"] = proba_xgb[:,1]
+    df.round({"pred_proba_log": 2, "pred_proba_xgb": 2})
     df = df.sort_values(by='class', ascending=False)
     #st.write("The number of ")
     st.write(df)
